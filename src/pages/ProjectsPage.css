@@ -1,0 +1,538 @@
+/* ============================= */
+/* FONTS */
+/* ============================= */
+@font-face {
+  font-family: "NeueHaasDisplayBold";
+  src: url("../assets/fonts/NeueHaasDisplayBold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../assets/fonts/Poppins-Medium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Coldiac";
+  src: url("../assets/fonts/Coldiac.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================= */
+/* MAIN LAYOUT */
+/* ============================= */
+.projects-main-page {
+  background: #000;
+  color: #fff;
+  min-height: 100vh;
+  /* Use CSS variable for nav height (set in Navbar.css). Fallback to 80px. Category height 60px. */
+  --category-height: 60px;
+  padding-top: calc(var(--nav-height, 80px) + var(--category-height));
+}
+
+/* ============================= */
+/* FIXED CATEGORY BAR (stays at top when scrolling) */
+/* ============================= */
+.categories-section {
+  background: #000;
+  padding: 20px 0;
+  width: 100vw; /* Full viewport width */
+  position: fixed; /* Change to fixed for full width behavior */
+  left: 0;
+  right: 0;
+  /* Default: place below the navbar when navbar is visible. When navbar hides we'll add a class to make it top:0 */
+  top: var(--nav-height, 80px);
+  z-index: 9999; /* Just below navbar's z-index */
+  border-bottom: 1px solid rgba(10, 9, 9, 0.2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  height: var(--category-height, 60px);
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: top 200ms ease;
+}
+
+/* When navbar hides (scrolled down), move categories to the very top */
+.categories-section.nav-hidden {
+  top: 0;
+}
+
+.categories-section.nav-visible {
+  top: var(--nav-height, 80px);
+}
+
+.categories-section::-webkit-scrollbar {
+  display: none;
+}
+
+.categories-container {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 max(40px, env(safe-area-inset-right)); /* Ensure padding respects safe area */
+  min-width: max-content;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  justify-content: flex-start; /* Align to start to prevent centering issues */
+  box-sizing: border-box; /* Include padding in width calculation */
+  /* Add padding to ensure last item is fully visible */
+  padding-right: calc(env(safe-area-inset-right, 40px) + 20px);
+}
+
+.category-link {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-family: "Coldiac", sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+  white-space: nowrap;
+  padding: 8px 5px; /* Added horizontal padding */
+  transition: all 0.3s ease;
+  /* Ensure text stays visible */
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.category-link.active {
+  color: #fff;
+}
+
+.link-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.42);
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.category-link.active .link-underline {
+  transform: scaleX(1);
+}
+
+.category-link:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================= */
+/* PROJECTS GRID */
+/* ============================= */
+.projects-grid-section {
+  padding: 40px 20px;
+  margin-top: var(
+    --category-height
+  ); /* Add margin to account for fixed category bar */
+  min-height: 60vh;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #333;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================= */
+/* TRUE MASONRY GRID LAYOUT */
+/* ============================= */
+.projects-grid-masonry {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 2), 1fr);
+  grid-auto-rows: 10px; /* base height unit */
+  gap: 20px; /* Increased distance between cards */
+  max-width: 1400px;
+  margin: 0 auto;
+  background: #000;
+  width: 100%;
+  /* Remove max-height and overflow to eliminate extra scrollbar */
+}
+
+.project-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #000;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  grid-row-end: span var(--span-rows, 45);
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  /* Add minimum height to ensure cards are visible */
+  min-height: 200px;
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+}
+
+/* ============================= */
+/* CARD CONTENT */
+/* ============================= */
+.project-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.project-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  display: block;
+}
+
+.project-card:hover .project-image {
+  transform: scale(1.08);
+}
+
+/* Always visible project name */
+.project-name-static {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
+  padding: 12px 10px;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.project-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fff;
+  font-family: "NeueHaasDisplayBold", sans-serif; /* Changed from Rollgates Luxury to NeueHaasDisplayBold */
+}
+
+/* Hover overlay with additional info */
+.project-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.42);
+  padding: 15px 12px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 3;
+}
+
+.project-card:hover .project-overlay {
+  opacity: 1;
+}
+
+.project-info {
+  color: #fff;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.project-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  flex-wrap: wrap;
+  font-family: "Poppins", sans-serif; /* Changed from Branch to Poppins */
+}
+
+.project-year::after,
+.project-location::after {
+  content: "•";
+  margin-left: 8px;
+  opacity: 0.7;
+}
+
+.project-category {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif; /* Changed from Branch to Poppins */
+}
+
+.project-description {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  font-family: "Poppins", sans-serif; /* Changed from Branch to Poppins */
+  /* Limit description lines for smaller cards */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-clamp: 3; /* Standard property for compatibility */
+}
+
+/* ============================= */
+/* RESPONSIVE DESIGN */
+/* ============================= */
+@media (min-width: 1025px) {
+  .projects-grid-masonry {
+    --grid-columns: 2;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .projects-grid-masonry {
+    --grid-columns: 2;
+    gap: 18px;
+  }
+  .categories-container {
+    gap: 25px;
+    padding: 0 30px;
+  }
+  .category-link {
+    font-size: 0.95rem;
+  }
+  .project-meta {
+    font-size: 0.7rem;
+    gap: 8px;
+  }
+  .project-description {
+    font-size: 0.75rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  .project-name-static {
+    padding: 10px 8px;
+  }
+  .project-title {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) and (min-width: 481px) {
+  .projects-main-page {
+    padding-top: 120px;
+  }
+  .categories-section {
+    top: var(--nav-height, 80px);
+    height: 50px;
+    padding: 15px 0;
+  }
+  .projects-grid-section {
+    padding: 20px 15px;
+  }
+  .projects-grid-masonry {
+    --grid-columns: 2;
+    gap: 16px;
+  }
+  .project-name-static {
+    padding: 8px 6px;
+  }
+  .project-title {
+    font-size: 0.85rem;
+  }
+  .categories-container {
+    gap: 20px;
+    padding: 0 25px;
+  }
+  .category-link {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em; /* Slightly reduce letter spacing for better fit */
+  }
+  .project-description {
+    -webkit-line-clamp: 2;
+    font-size: 0.7rem;
+    line-clamp: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-main-page {
+    padding-top: 110px;
+  }
+  .categories-section {
+    top: var(--nav-height, 80px);
+    height: 45px;
+    padding: 12px 0;
+  }
+  .projects-grid-section {
+    padding: 15px 10px;
+  }
+  .projects-grid-masonry {
+    --grid-columns: 1;
+    gap: 15px;
+  }
+  .project-title {
+    font-size: 0.8rem;
+  }
+  .categories-container {
+    gap: 15px;
+    padding: 0 20px;
+  }
+  .category-link {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em; /* Further reduce letter spacing on mobile */
+  }
+  .project-meta {
+    font-size: 0.65rem;
+    gap: 6px;
+    flex-direction: column;
+  }
+  .project-year::after,
+  .project-location::after {
+    display: none;
+  }
+  .project-category {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+  }
+  .project-description {
+    font-size: 0.7rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  .project-overlay {
+    padding: 10px 8px;
+  }
+  .project-name-static {
+    padding: 6px 5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .categories-container {
+    gap: 12px;
+  }
+  .category-link {
+    font-size: 0.75rem;
+  }
+  .project-title {
+    font-size: 0.75rem;
+  }
+  .project-meta {
+    font-size: 0.6rem;
+  }
+  .project-name-static {
+    padding: 5px 4px;
+  }
+  .project-description {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+  .projects-grid-masonry {
+    gap: 12px;
+  }
+}
+
+/* ============================= */
+/* TOUCH OPTIMIZATION */
+/* ============================= */
+@media (hover: none) and (pointer: coarse) {
+  .project-card:hover {
+    transform: none;
+  }
+
+  .project-overlay {
+    opacity: 1;
+    background: linear-gradient(transparent 40%, rgba(0, 0, 0, 0.9));
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 8px;
+  }
+
+  .project-info {
+    gap: 4px;
+  }
+  .project-description {
+    display: none;
+  }
+}
+
+/* ============================= */
+/* HIGH DENSITY + ACCESSIBILITY */
+/* ============================= */
+@media (min-resolution: 192dpi) {
+  .project-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card,
+  .project-image,
+  .project-overlay {
+    transition: none;
+  }
+  .project-card:hover {
+    transform: none;
+  }
+}

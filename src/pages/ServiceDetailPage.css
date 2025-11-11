@@ -1,0 +1,807 @@
+/* src/pages/ServiceDetailPage.css */
+@font-face {
+  font-family: 'NeueHaasDisplayBold';
+  src: url('../assets/fonts/NeueHaasDisplayBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.service-detail-page {
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Loading State */
+.service-detail-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #000;
+  font-family: 'Poppins', sans-serif;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Button-86 Style - Complete Hover Effects */
+.button-86 {
+  all: unset;
+  font-size: 16px;
+  background: transparent;
+  border: none;
+  position: relative;
+  color: #f0f0f0;
+  cursor: pointer;
+  z-index: 1;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 0.3s ease;
+}
+
+/* Main background layer */
+.button-86::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: -99999;
+  transition: all .4s;
+  transform: translate(0%, 0%);
+  width: 100%;
+  height: 100%;
+  background: #28282d;
+  border-radius: 0px;
+}
+
+/* Animated accent layer - Pink hue removed */
+.button-86::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: -99999;
+  transition: all .4s;
+  transform: translate(10px, 10px);
+  width: 35px;
+  height: 35px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+}
+
+/* Hover State - Main background animation */
+.button-86:hover::before {
+  transform: translate(5%, 20%);
+  width: 110%;
+  height: 110%;
+}
+
+/* Hover State - Accent layer animation */
+.button-86:hover::after {
+  border-radius: 0px;
+  transform: translate(0, 0);
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure text color stays white on all states */
+.button-86:hover,
+.button-86:focus,
+.button-86:active {
+  color: #f0f0f0 !important;
+}
+
+/* Active/Click State */
+.button-86:active::after {
+  transition: 0s;
+  transform: translate(0, 5%);
+}
+
+/* Focus State for accessibility */
+.button-86:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Disabled State */
+.button-86:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button-86:disabled:hover::before,
+.button-86:disabled:hover::after {
+  transform: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+}
+
+/* Navigation Header */
+.service-detail-header {
+  padding: 100px 0 0;
+  background: #000;
+  font-family: 'Poppins', sans-serif;
+}
+
+.breadcrumb-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Simple Back Button without button-86 effects */
+.back-btn {
+  color: #f0f0f0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #ccc;
+  font-family: 'Poppins', sans-serif;
+}
+
+.breadcrumb a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.breadcrumb a:hover {
+  color: #fff;
+}
+
+.breadcrumb .current {
+  color: #fff;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Hero Section */
+.service-hero {
+  padding: 80px 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.service-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.service-hero-content {
+  position: relative;
+}
+
+.service-category-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Poppins', sans-serif;
+}
+
+.service-hero-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.service-hero-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ccc;
+  margin-bottom: 40px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.service-hero-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 40px;
+  padding: 30px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Poppins', sans-serif;
+}
+
+.meta-item {
+  text-align: center;
+}
+
+.meta-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.meta-value {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.cta-button {
+  width: auto;
+  height: auto;
+}
+
+/* Hero Visual */
+.service-hero-visual {
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+}
+
+.main-image-container {
+  position: relative;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.main-service-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  filter: brightness(0.9);
+  transition: opacity 0.8s ease-in-out;
+}
+
+/* Auto-slide Indicators */
+.slide-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.indicator.active {
+  background: #fff;
+  border-color: #fff;
+}
+
+.indicator:hover {
+  border-color: #fff;
+}
+
+/* Process Section */
+.service-process {
+  padding: 100px 0;
+  background: rgba(255, 255, 255, 0.02);
+  font-family: 'Poppins', sans-serif;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #ccc;
+  font-family: 'Poppins', sans-serif;
+}
+
+.process-steps {
+  display: grid;
+  gap: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.process-step {
+  position: relative;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.process-step:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-5px);
+}
+
+.step-number {
+  font-size: 3rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 15px;
+  line-height: 1;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.step-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #fff;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.step-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ccc;
+  font-family: 'Poppins', sans-serif;
+}
+
+.step-line {
+  width: 60px;
+  height: 2px;
+  background: #fff;
+}
+
+/* Benefits Section */
+.service-benefits {
+  padding: 100px 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.benefits-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.benefits-content > p {
+  font-size: 1.1rem;
+  color: #ccc;
+  margin-bottom: 40px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+.benefit-check {
+  color: #fff;
+  font-weight: bold;
+  margin-right: 15px;
+  font-size: 1.2rem;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.benefits-visual img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  filter: brightness(0.9);
+}
+
+/* Service Details */
+.service-details {
+  padding: 100px 0;
+  background: rgba(255, 255, 255, 0.02);
+  font-family: 'Poppins', sans-serif;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.detail-section h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fff;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.team-list,
+.deliverables-list {
+  list-style: none;
+  padding: 0;
+}
+
+.team-list li,
+.deliverables-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.team-list li:last-child,
+.deliverables-list li:last-child {
+  border-bottom: none;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.service-tag {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Related Services */
+.related-services {
+  padding: 100px 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.related-services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.related-service-card {
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  height: 400px;
+  overflow: hidden;
+}
+
+.related-service-card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-10px);
+}
+
+.related-service-card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.related-service-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  filter: brightness(0.8);
+  transition: filter 0.3s ease;
+}
+
+.related-service-card:hover img {
+  filter: brightness(0.6);
+}
+
+.related-service-content {
+  padding: 25px;
+}
+
+.related-service-content h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.related-service-content p {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 15px;
+  line-height: 1.5;
+  font-family: 'Poppins', sans-serif;
+}
+
+.view-service {
+  font-size: 0.8rem;
+  padding: 8px 16px;
+  width: auto;
+  height: auto;
+}
+
+/* CTA Section */
+.service-cta {
+  padding: 100px 0;
+  background: #000;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.cta-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'NeueHaasDisplayBold', sans-serif;
+}
+
+.cta-content p {
+  font-size: 1.1rem;
+  color: #ccc;
+  margin-bottom: 40px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Poppins', sans-serif;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.cta-primary,
+.cta-secondary {
+  padding: 18px 40px;
+  font-size: 1rem;
+  width: auto;
+  height: auto;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 1024px) {
+  .service-hero-grid,
+  .benefits-grid {
+    gap: 40px;
+  }
+  
+  .details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .related-services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .breadcrumb-nav {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .service-hero-grid,
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .service-hero-meta {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .related-services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .main-service-image {
+    height: 300px;
+  }
+  
+  .button-86 {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+  
+  .back-btn {
+    padding: 10px 20px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  .service-hero-title {
+    font-size: 2rem;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+  }
+  
+  .process-step {
+    padding: 25px;
+  }
+  
+  .slide-indicators {
+    gap: 8px;
+  }
+  
+  .indicator {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .button-86 {
+    padding: 10px 20px;
+    font-size: 12px;
+  }
+  
+  .back-btn {
+    padding: 8px 16px;
+    font-size: 0.7rem;
+  }
+  
+  .cta-buttons {
+    gap: 15px;
+  }
+  
+  .cta-primary,
+  .cta-secondary {
+    padding: 15px 30px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Remove rounded corners */
+.service-detail-page * {
+  border-radius: 0 !important;
+}
+
+/* Ensure all button text stays white */
+.button-86,
+.button-86:hover,
+.button-86:focus,
+.button-86:active,
+.cta-button,
+.cta-button:hover,
+.view-service,
+.view-service:hover,
+.cta-primary,
+.cta-primary:hover,
+.cta-secondary,
+.cta-secondary:hover {
+  color: #f0f0f0 !important;
+}
+
+/* Back button text color */
+.back-btn,
+.back-btn:hover {
+  color: #f0f0f0 !important;
+}
