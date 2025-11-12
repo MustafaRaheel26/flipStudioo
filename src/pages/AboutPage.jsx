@@ -21,6 +21,7 @@ function useMediaQuery(query) {
 
 export default function AboutPage() {
   const containerRef = useRef(null);
+  const videoRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -28,6 +29,79 @@ export default function AboutPage() {
 
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
+
+  useEffect(() => {
+    const video = videoRef.current;
+    
+    const initializeVideo = async () => {
+      if (!video) return;
+
+      try {
+        // Set video properties
+        video.playsInline = true;
+        video.muted = true;
+        video.loop = false; // Remove loop
+        video.preload = "auto";
+        
+        // Wait for video to be ready
+        if (video.readyState < 3) {
+          await new Promise((resolve) => {
+            video.addEventListener('loadeddata', resolve, { once: true });
+            video.addEventListener('canplaythrough', resolve, { once: true });
+          });
+        }
+        
+        // Play the video once
+        await video.play();
+        console.log("Video playing successfully");
+        
+      } catch (error) {
+        console.log("Video play failed:", error);
+        
+        // Alternative approach for browsers that block autoplay
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.log("Autoplay prevented:", err);
+          });
+        }
+      }
+    };
+
+    // Add event listener for page interaction to start video
+    const handleUserInteraction = () => {
+      if (video && video.paused) {
+        video.play().catch(console.error);
+      }
+    };
+
+    // Restart video when it ends
+    const handleVideoEnd = () => {
+      if (video) {
+        video.currentTime = 0;
+        video.play().catch(console.error);
+      }
+    };
+
+    // Initialize video when component mounts
+    initializeVideo();
+
+    // Add event listeners
+    if (video) {
+      video.addEventListener('ended', handleVideoEnd);
+    }
+    document.addEventListener('click', handleUserInteraction);
+    document.addEventListener('touchstart', handleUserInteraction);
+
+    return () => {
+      if (video) {
+        video.removeEventListener('ended', handleVideoEnd);
+        video.pause();
+      }
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+  }, []);
 
   // ===== TEAM CONFIGURATION =====
   const team = [
@@ -99,14 +173,33 @@ export default function AboutPage() {
 
   return (
     <div ref={containerRef} className="about-page">
-      {/* ===== Hero Section ===== */}
+      {/* ===== Hero Section with Video Background ===== */}
       <motion.section
         className="about-hero"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
+        {/* Video Background */}
+        <div className="video-background">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            className="hero-video"
+          >
+            <source src="/src/assets/vid.mp4" type="video/mp4" />
+            {/* Fallback for different video formats */}
+            <source src="/src/assets/vid.webm" type="video/webm" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="video-overlay"></div>
+        </div>
+
         <motion.div
+          className="hero-content"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
